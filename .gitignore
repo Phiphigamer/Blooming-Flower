@@ -1,0 +1,14 @@
+# KiCad backups and caches
+*-backups/
+*.kicad_prl.lck
+*.lck
+fp-info-cache
+_autosave-*
+*.bak
+
+# PlatformIO
+.pio/
+.vscode/
+
+# Wi-Fi secrets
+firmware/hopebloom/include/config.h
