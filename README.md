@@ -7,8 +7,7 @@ Two flowers are paired over Wi-Fi. When someone touches the ring on the base of 
 ![HopeBloom renders](docs/images/renders.png)
 
 ## Why
-
-<!-- TODO (Philippe): write this section yourself. -->
+I got some inspiration from hospital patients who lived alone.
 
 ## How it works
 
