@@ -1,4 +1,4 @@
-"""HopeBloom patient unit, rev C ("everything hides in the base").
+"""HopeBloom patient unit, rev D ("everything hides in the base").
 
 Low weighted base (Ø120) holds the main PCB (ESP32-C3), the MG90S servo and the touch-ring LEDs.
 A slim stem carries a pushrod up to the flower head: five translucent petals hinged at the cup rim,
@@ -19,7 +19,7 @@ P = dict(
     stem_ro=4.0, stem_ri=3.0, stem_z0=20.0, stem_z1=210.0,
     cup_ro=20, cup_wall=1.2, cup_h=27, cup_bot=2, cup_open_r=8,
     board_r=18.5, board_t=1.6,
-    n_petals=5, petal_l=60, petal_w=34, petal_t=2, open_deg=62, closed_deg=8, hinge_off=1.7,
+    n_petals=5, petal_l=60, petal_w=30, petal_t=2, open_deg=62, closed_deg=12, hinge_off=1.7,
     rod_r=1.5, head_r=6.5, link_at=10,
 )
 CZ0 = P['stem_z1']                       # 210 cup bottom
@@ -54,7 +54,7 @@ TRAVEL = HEAD_OPEN - HEAD_CLOSED
 STATE = float(os.environ.get("HB_STATE", "1"))
 ANG = P['closed_deg'] + (P['open_deg'] - P['closed_deg']) * STATE
 HEAD_Z = HEAD_CLOSED + TRAVEL * STATE
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out_c")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out_d")
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -154,13 +154,40 @@ head = cyl(P['head_r'], (0, 0, HEAD_Z - 1), (0, 0, HEAD_Z + 1))
 
 
 def petal_solid():
-    L, Wd = P['petal_l'], P['petal_w'] / 2
-    half = [(2.8, -1.0), (2.8, 3.5), (9, 8), (14, 15), (16.5, 25), (17, 34), (15.5, 44), (11.5, 52)]
-    tip = [(9 * math.cos(math.radians(t)), L - 9 + 9 * math.sin(math.radians(t))) for t in range(10, 171, 20)]
-    pts = half + tip + [(-x, z) for x, z in reversed(half)]
+    # teardrop outline, cupped across, slight flare toward the tip, thinner edges
+    L, Wh = P['petal_l'], P['petal_w'] / 2
+    Rc, Rl = 24.0, 230.0                  # cupping radius across, flare radius along
+    t0, te = 2.0, 1.2                     # thickness at the midrib / at the edges
+    s0 = 3.5                              # straight narrow neck above the hinge (clears the lugs)
+
+    def half_w(s):
+        if s <= s0:
+            return 2.8
+        x = (s - s0) / (L - s0)
+        g = math.sin(math.pi * x ** 1.3) ** 0.6
+        return 2.8 * (1 - x) + Wh * g
+
+    def mid_x(s, u):
+        flare = Rl - math.sqrt(Rl * Rl - s * s)
+        cup = Rc - math.sqrt(Rc * Rc - u * u)
+        return HX + flare - cup
+
+    stations = [0, 1.5, s0, 6, 9, 13, 18, 24, 30, 36, 42, 47, 51, 54.5, 57, 58.6, 59.5]
+    n = 12
+    wires = []
+    for s in stations:
+        w = half_w(s)
+        us = [-w * math.cos(math.pi * i / n) for i in range(n + 1)]
+        outer, inner = [], []
+        for u in us:
+            th = t0 - (t0 - te) * (u / w) ** 2 if w > 0 else te
+            xm = mid_x(s, u)
+            outer.append(cq.Vector(xm + th / 2, u, CZ1 + s))
+            inner.append(cq.Vector(xm - th / 2, u, CZ1 + s))
+        wires.append(cq.Wire.makePolygon(outer + inner[::-1], close=True))
+    blade = cq.Workplane().add(cq.Solid.makeLoft(wires, ruled=False))
+    blade = blade.cut(cyl(0.8, (HX, -20, CZ1), (HX, 20, CZ1)))
     knuckle = cyl(1.6, (HX, -2.8, CZ1), (HX, 2.8, CZ1)).cut(cyl(0.8, (HX, -4, CZ1), (HX, 4, CZ1)))
-    blade = (cq.Workplane("YZ").polyline(pts).close().extrude(P['petal_t'])
-             .translate((HX - P['petal_t'] / 2, 0, CZ1)).cut(cyl(0.8, (HX, -20, CZ1), (HX, 20, CZ1))))
     return blade.union(knuckle)
 
 
@@ -192,11 +219,11 @@ printable = ["01_petal", "04_cup", "06_pushrod_head", "09_leaf", "10_touch_ring"
 
 if __name__ == "__main__":
     tag = "open" if STATE > 0.5 else "closed"
-    asm = cq.Assembly(name=f"HopeBloom_revC_{tag}")
+    asm = cq.Assembly(name=f"HopeBloom_revD_{tag}")
     for name, (shapes, rgb) in parts.items():
         for i, s in enumerate(shapes):
             asm.add(s, name=f"{name}_{i + 1}" if len(shapes) > 1 else name, color=cq.Color(*rgb))
-    asm.export(os.path.join(OUT, f"HopeBloom_revC_assembly_{tag}.step"))
+    asm.export(os.path.join(OUT, f"HopeBloom_revD_assembly_{tag}.step"))
     if tag == "open":
         for d in ("step", "stl"):
             os.makedirs(os.path.join(OUT, d), exist_ok=True)

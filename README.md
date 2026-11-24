@@ -6,6 +6,8 @@ Two flowers are paired over Wi-Fi. When someone touches the ring on the base of 
 
 ![HopeBloom renders](docs/images/renders.png)
 
+![Flower head close-up](docs/images/flower_closeup.png)
+
 ## Why
 I got some inspiration from hospital patients who lived alone.
 
@@ -24,8 +26,8 @@ I got some inspiration from hospital patients who lived alone.
 | Base | Ø120 mm, weighted with a steel disc, holds the main PCB and the servo |
 | Main PCB | Round Ø108 mm, custom: ESP32-C3-MINI-1, USB-C, AMS1117-3.3, TTP223 touch, 74AHCT1G125 level shifter, 8× WS2812B |
 | LED core PCB | Round Ø37 mm, 12× WS2812B, inside the flower cup |
-| Mechanism | MG90S micro servo → Ø3 mm pushrod in an Ø8 mm aluminium stem → pushrod head → 5 steel links open the petals (5.7 mm travel) |
-| Petals and touch ring | Translucent PETG, 3D printed |
+| Mechanism | MG90S micro servo → Ø3 mm pushrod in an Ø8 mm aluminium stem → pushrod head → 5 steel links open the petals (5.2 mm travel) |
+| Petals and touch ring | Translucent PETG, 3D printed. Petals are cupped and teardrop-shaped |
 
 ### Pinout (ESP32-C3)
 
@@ -42,12 +44,12 @@ I got some inspiration from hospital patients who lived alone.
 
 <!-- TODO: add a screenshot of the assembly (Onshape / Fusion) here -->
 
-- [`cad/HopeBloom_revC_assembly_open.step`](cad/HopeBloom_revC_assembly_open.step): full assembly, petals open
-- [`cad/HopeBloom_revC_assembly_closed.step`](cad/HopeBloom_revC_assembly_closed.step): full assembly, bud closed
+- [`cad/HopeBloom_revD_assembly_open.step`](cad/HopeBloom_revD_assembly_open.step): full assembly, petals open
+- [`cad/HopeBloom_revD_assembly_closed.step`](cad/HopeBloom_revD_assembly_closed.step): full assembly, bud closed
 - [`cad/step/`](cad/step): one STEP file per part (17 parts)
 - [`cad/stl/`](cad/stl): the 8 parts to 3D print
 - [`cad/hopebloom_model.py`](cad/hopebloom_model.py): parametric CadQuery source of the model
-- [`docs/HopeBloom_HB-003_revC_drawing.pdf`](docs/HopeBloom_HB-003_revC_drawing.pdf): technical drawing with the mechanical BOM
+- [`docs/HopeBloom_HB-003_revD_drawing.pdf`](docs/HopeBloom_HB-003_revD_drawing.pdf): technical drawing with the mechanical BOM
 
 ## PCB
 
