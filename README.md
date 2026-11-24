@@ -9,7 +9,12 @@ Two flowers are paired over Wi-Fi. When someone touches the ring on the base of 
 ![Flower head close-up](docs/images/flower_closeup.png)
 
 ## Why
-I got some inspiration from hospital patients who lived alone.
+I got some inspiration from hospital patients who lived alone and had a family living very far. I want to give patients and their families a simple way to stay close when talking is hard.
+
+The idea is a pair of connected flowers, one by the patient's bed and one at home:
+- every time the family sends love, the patient's flower opens a little more, so they can watch support build through the day.
+- the patient chooses with a simple twist, they set "resting" or "I'd love a call," and the flower at home closes or blooms to match.
+- It's easy to use with weak hands on tired days, and it works even where hospital Wi-Fi blocks it.
 
 ## How it works
 
